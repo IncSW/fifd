@@ -6,16 +6,16 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	new51degrees "github.com/IncSW/go-51degrees"
-	old51degrees "github.com/IncSW/go-51degrees/test/51degrees"
+	go51degrees "github.com/IncSW/go-51degrees"
+	cgo51degrees "github.com/IncSW/go-51degrees/test/51degrees"
 )
 
 func TestReader(t *testing.T) {
-	reader, err := new51degrees.NewReaderFromFile("./51Degrees-EnterpriseV3.4.trie")
+	reader, err := go51degrees.NewReaderFromFile("./51Degrees-EnterpriseV3.4.trie")
 	if err != nil {
 		t.Fatal(err)
 	}
-	provider := old51degrees.NewProvider("./51Degrees-EnterpriseV3.4.trie")
+	provider := cgo51degrees.NewProvider("./51Degrees-EnterpriseV3.4.trie")
 
 	for i, userAgent := range userAgents {
 		device := reader.MatchDevice(userAgent)
@@ -28,19 +28,19 @@ func TestReader(t *testing.T) {
 			!assert.Equal(t, device.GetValue("BrowserVersion"), match.GetValue("BrowserVersion"), userAgent) ||
 			!assert.Equal(t, device.GetValue("IsCrawler"), match.GetValue("IsCrawler"), userAgent) ||
 			!assert.Equal(t, device.GetValue("DeviceType"), match.GetValue("DeviceType"), userAgent) {
-			old51degrees.DeleteMatch(match)
+			cgo51degrees.DeleteMatch(match)
 			return
 		}
-		old51degrees.DeleteMatch(match)
+		cgo51degrees.DeleteMatch(match)
 	}
 }
 
 func BenchmarkReader(b *testing.B) {
-	reader, err := new51degrees.NewReaderFromFile("./51Degrees-EnterpriseV3.4.trie")
+	reader, err := go51degrees.NewReaderFromFile("./51Degrees-EnterpriseV3.4.trie")
 	if err != nil {
 		b.Fatal(err)
 	}
-	provider := old51degrees.NewProvider("./51Degrees-EnterpriseV3.4.trie")
+	provider := cgo51degrees.NewProvider("./51Degrees-EnterpriseV3.4.trie")
 
 	b.Log("fixed ua:", userAgents[0])
 	b.ReportAllocs()
@@ -105,7 +105,7 @@ func BenchmarkReader(b *testing.B) {
 		})
 	})
 
-	b.Run("c", func(b *testing.B) {
+	b.Run("cgo", func(b *testing.B) {
 		b.Run("fixed", func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				match := provider.GetMatch(userAgents[0])
@@ -117,7 +117,7 @@ func BenchmarkReader(b *testing.B) {
 				match.GetValue("BrowserVersion")
 				match.GetValue("IsCrawler")
 				match.GetValue("DeviceType")
-				old51degrees.DeleteMatch(match)
+				cgo51degrees.DeleteMatch(match)
 			}
 		})
 		b.Run("fixed-parallel", func(b *testing.B) {
@@ -132,7 +132,7 @@ func BenchmarkReader(b *testing.B) {
 					match.GetValue("BrowserVersion")
 					match.GetValue("IsCrawler")
 					match.GetValue("DeviceType")
-					old51degrees.DeleteMatch(match)
+					cgo51degrees.DeleteMatch(match)
 				}
 			})
 		})
@@ -147,7 +147,7 @@ func BenchmarkReader(b *testing.B) {
 				match.GetValue("BrowserVersion")
 				match.GetValue("IsCrawler")
 				match.GetValue("DeviceType")
-				old51degrees.DeleteMatch(match)
+				cgo51degrees.DeleteMatch(match)
 			}
 		})
 		b.Run("range-parallel", func(b *testing.B) {
@@ -163,7 +163,7 @@ func BenchmarkReader(b *testing.B) {
 					match.GetValue("BrowserVersion")
 					match.GetValue("IsCrawler")
 					match.GetValue("DeviceType")
-					old51degrees.DeleteMatch(match)
+					cgo51degrees.DeleteMatch(match)
 				}
 			})
 		})
