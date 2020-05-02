@@ -14,11 +14,10 @@ type Matcher struct {
 
 func (m *Matcher) getMatchingHashFromListNodeSearch() *NodeHash {
 	hashes := m.currentNode.Hashes
-	lower := int32(0)
 	upper := m.currentNode.HashesCount - 1
-	middle := int32(0)
+	lower := int32(0)
 	for lower <= upper {
-		middle = lower + (upper-lower)/2
+		middle := lower + (upper-lower)/2
 		if hashes[middle].HashCode == m.hash {
 			return &hashes[middle]
 		} else if hashes[middle].HashCode > m.hash {
