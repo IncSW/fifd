@@ -1,4 +1,4 @@
-package fiftyonedegrees
+package fifd
 
 import (
 	"encoding/binary"

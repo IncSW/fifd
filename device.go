@@ -1,4 +1,4 @@
-package fiftyonedegrees
+package fifd
 
 type Device struct {
 	reader *Reader

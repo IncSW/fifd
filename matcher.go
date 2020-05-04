@@ -1,4 +1,4 @@
-package fiftyonedegrees
+package fifd
 
 type Matcher struct {
 	reader       *Reader

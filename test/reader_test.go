@@ -6,12 +6,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	go51degrees "github.com/IncSW/go-51degrees"
-	cgo51degrees "github.com/IncSW/go-51degrees/test/51degrees"
+	"github.com/IncSW/fifd"
+	cgo51degrees "github.com/IncSW/fifd/test/51degrees"
 )
 
 func TestReader(t *testing.T) {
-	reader, err := go51degrees.NewReaderFromFile("./51Degrees-EnterpriseV3.4.trie")
+	reader, err := fifd.NewReaderFromFile("./51Degrees-EnterpriseV3.4.trie")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -36,7 +36,7 @@ func TestReader(t *testing.T) {
 }
 
 func BenchmarkReader(b *testing.B) {
-	reader, err := go51degrees.NewReaderFromFile("./51Degrees-EnterpriseV3.4.trie")
+	reader, err := fifd.NewReaderFromFile("./51Degrees-EnterpriseV3.4.trie")
 	if err != nil {
 		b.Fatal(err)
 	}
