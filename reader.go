@@ -8,7 +8,17 @@ import (
 )
 
 type Reader struct {
-	version                 uint16
+	BaseDrift      int
+	BaseDifference int
+
+	version         uint16
+	publishedYear   int16
+	publishedMonth  byte
+	publishedDay    byte
+	nextUpdateYear  int16
+	nextUpdateMonth byte
+	nextUpdateDay   byte
+
 	strings                 map[int]string
 	componentsCount         int
 	devicePropertiesCount   int
@@ -22,7 +32,11 @@ type Reader struct {
 }
 
 func (r *Reader) MatchDevice(userAgent string) Device {
-	matcher := NewMatcher(r, userAgent)
+	return r.MatchDeviceWithTolerances(userAgent, 0, 0)
+}
+
+func (r *Reader) MatchDeviceWithTolerances(userAgent string, drift int, difference int) Device {
+	matcher := NewMatcher(r, userAgent, drift, difference)
 	return matcher.Match()
 }
 
@@ -57,18 +71,18 @@ func initReader(reader *Reader, buffer []byte) error {
 	// tag := buffer[offset : offset+16]
 	offset += 16
 
-	// publishedYear := int16(binary.LittleEndian.Uint16(buffer[offset : offset+2]))
+	reader.publishedYear = int16(binary.LittleEndian.Uint16(buffer[offset : offset+2]))
 	offset += 2
-	// publishedMonth := buffer[offset]
+	reader.publishedMonth = buffer[offset]
 	offset += 1
-	// publishedDay := buffer[offset]
+	reader.publishedDay = buffer[offset]
 	offset += 1
 
-	// nextUpdateYear := int16(binary.LittleEndian.Uint16(buffer[offset : offset+2]))
+	reader.nextUpdateYear = int16(binary.LittleEndian.Uint16(buffer[offset : offset+2]))
 	offset += 2
-	// nextUpdateMonth := buffer[offset]
+	reader.nextUpdateMonth = buffer[offset]
 	offset += 1
-	// nextUpdateDay := buffer[offset]
+	reader.nextUpdateDay = buffer[offset]
 	offset += 1
 
 	// copyrightOffset := int32(binary.LittleEndian.Uint32(buffer[offset : offset+4]))
